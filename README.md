@@ -22,10 +22,16 @@ This script provides the next features:
 Follow the next installation instructions:
 
 ```bash
-cd /opt
-sudo git clone https://github.com/J-Rios/elfcheck
-sudo chmod +x /opt/elfcheck/src/elfcheck
-sudo ln -s /opt/elfcheck/src/elfcheck /usr/local/bin/elfcheck
+git clone https://github.com/J-Rios/elfcheck
+cd elfcheck
+make install
+```
+
+The Tool will be installed in /usr/local/bin directory, so you can remove current directory:
+
+```bash
+cd ..
+rm -rf elfcheck/
 ```
 
 ## Usage
@@ -44,4 +50,18 @@ elfcheck mybinary.elf -s main.cpp
 
 # Check if ELF file use any common C/C++ dynamic memory function
 elfcheck mybinary.elf -x
+```
+
+## Notes
+
+- You can update the tool to get the latest version as follow:
+
+```bash
+make update
+```
+
+- You can completely uninstall the tool as follow:
+
+```bash
+make uninstall
 ```
