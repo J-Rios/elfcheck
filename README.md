@@ -2,6 +2,8 @@
 
 Easily analyze and check information from binary files (ELF).
 
+Current support is for ARM architecture ELF files (tested with STM32 and SAM microcontrollers ELFs).
+
 ## Features
 
 This script provides the next features:
