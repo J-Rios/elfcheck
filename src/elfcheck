@@ -133,6 +133,29 @@ disassembly()
 
 ###############################################################################
 
+# Show Common Dynamic Memory Functions Used (-x)
+
+check_dynamic_memory_function()
+{
+    echo ""
+    echo "Detected functions related to dynamic memory usage:"
+    echo ""
+    RESULT=$(\
+        arm-none-eabi-objdump -d $FILE_ELF -C \
+        | grep -E ' <malloc>:| <calloc>:| <realloc>:| <free>:|'\
+' <new>:| <delete>:|'\
+' <_malloc_r>:| <_calloc_r>:| <_realloc_r>:| <_free_r>:| <_Bfree>:'
+    )
+    if [[ $? != 0 ]]; then
+        echo "None"
+    else
+        echo "${RESULT}"
+    fi
+    echo ""
+}
+
+###############################################################################
+
 # Show memory size of requested component (-s)
 
 size_of_component()
@@ -387,6 +410,9 @@ do
     elif [ "$arg" == "-s" ] || [ "$arg" == "--size" ]; then
         ii=$((i+1))
         size_of_component "${!ii}"
+        exit 0
+    elif [ "$arg" == "-x" ] || [ "$arg" == "--dynamic" ]; then
+        check_dynamic_memory_function
         exit 0
     else
         echo "Error: Invalid Argument \"$arg\""
