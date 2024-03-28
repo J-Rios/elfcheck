@@ -32,13 +32,6 @@ FILE_ELF_NAME=$(basename -- "$FILE_ELF")
 FILE_ELF_NAME="${FILE_ELF_NAME%.*}"
 DIR_OUT_ANALYSIS="./elf_analysis"
 
-FILE_OUT_INFO="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}_elf_info.txt"
-FILE_OUT_STRINGS="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}_elf_strings.txt"
-FILE_OUT_SYM="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}_elf_symbols.txt"
-FILE_OUT_SYM_BSS="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}_elf_symbols_bss.txt"
-FILE_OUT_SYM_DATA="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}_elf_symbols_data.txt"
-FILE_OUT_SYM_TEXT="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}_elf_symbols_text.txt"
-
 ###############################################################################
 
 # Auxiliary Functions
@@ -114,12 +107,20 @@ echof_info_size()
 
 analysis()
 {
+    DIR_OUT="${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}"
+    FILE_OUT_INFO="${DIR_OUT}/${FILE_ELF_NAME}_elf_info.txt"
+    FILE_OUT_STRINGS="${DIR_OUT}/${FILE_ELF_NAME}_elf_strings.txt"
+    FILE_OUT_SYM="${DIR_OUT}/${FILE_ELF_NAME}_elf_symbols.txt"
+    FILE_OUT_SYM_BSS="${DIR_OUT}/${FILE_ELF_NAME}_elf_symbols_bss.txt"
+    FILE_OUT_SYM_DATA="${DIR_OUT}/${FILE_ELF_NAME}_elf_symbols_data.txt"
+    FILE_OUT_SYM_TEXT="${DIR_OUT}/${FILE_ELF_NAME}_elf_symbols_text.txt"
+
     echo ""
     echo "Analyzing ELF file \"${FILE_ELF}\"..."
     echo ""
 
     # Create Output directory and clear output files
-    mkdir -p $DIR_OUT_ANALYSIS
+    mkdir -p $DIR_OUT
     clear_out_files
 
     echo "Getting Memory and General Information..."
@@ -267,10 +268,10 @@ analysis()
 
     echo ""
     echo Generated Files:
-    ls -lh ${DIR_OUT_ANALYSIS}/${FILE_ELF_NAME}*
+    ls -lh ${DIR_OUT}/${FILE_ELF_NAME}*
     echo ""
     echo "Analysis completed"
-    echo "Check output files from ${DIR_OUT_ANALYSIS} directory"
+    echo "Check output files from ${DIR_OUT} directory"
     echo ""
 }
 
@@ -364,9 +365,9 @@ show_help()
     echo "${SCRIPT_NAME} binary.elf [option] [argument]"
     echo ""
     echo "Options:"
-    echo "  -h, --help                Show current help information"
     echo "  -a, --analyse             Analyse and export ELF info to files"
     echo "  -d, --disassemble [funct] Show ASM code of a function"
+    echo "  -h, --help                Show current help information"
     echo "  -s, --size [file.cpp]     Show memory size of a component"
     echo "  -x, --dynamic             Show common dynamic memory function used"
     echo ""
