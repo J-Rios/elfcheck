@@ -17,7 +17,9 @@ This script provides the next features:
 
 - Check size of source code components (i.e. mycomponent.cpp).
 
-- Check and show if ELF binary uses any common C/C++ dynamic memory related function (malloc, free, new, delete, etc).
+- Check and show if an ELF binary uses any Floating Point Operation software implementation function (__aeabi_fmul, __aeabi_fdiv, etc).
+
+- Check and show if an ELF binary uses any common C/C++ dynamic memory related function (malloc, free, new, delete, etc).
 
 ## Installation
 

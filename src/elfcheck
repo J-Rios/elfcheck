@@ -15,6 +15,9 @@
 #
 # - Check size of source code components (i.e. mycomponent.cpp).
 #
+# - Check and show if ELF binary uses any Floating Point Operation software
+#   implementation functions.
+#
 # - Check and show if ELF binary uses any common C/C++ dynamic memory
 #   related function (malloc, free, new, delete, etc).
 #
@@ -314,6 +317,51 @@ disassembly()
 
 ###############################################################################
 
+# Show if any Software Floating Point Operation Functions is Used (-f)
+
+check_software_float()
+{
+    echo ""
+    echo "Detected Software Floating Point Operation functions usage:"
+    echo ""
+    RESULT=$(
+        ${TC}objdump -d $FILE_ELF -C \
+        | grep -E \
+' <__aeabi_[fd]mul>| <__aeabi_[fd]add>| <__aeabi_[fd]sub>|'\
+' <__aeabi_[fd]rsub>| <__aeabi_[fd]div>| <__aeabi_i2[fd]>| <__aeabi_[fd]2i>|'\
+' <__aeabi_ui2[fd]>| <__aeabi_[fd]2ui>| <__aeabi_[fd]cmpeq>|'\
+'<__aeabi_[fd]cmplt>| <__aeabi_[fd]cmple>| <__aeabi_[fd]cmpge>|'\
+' <__aeabi_[fd]cmpgt>| <__aeabi_[fd]cmpun>'
+    )
+    if [[ $? != 0 ]]; then
+        echo "None"
+        echo ""
+        return
+    fi
+    echo "${RESULT}"
+    echo ""
+    echo "Info regarding ARM ABI Floating Point Software Functions:"
+    echo "  __aeabi_Xadd: Floating point addition"
+    echo "  __aeabi_Xsub: Floating point subtraction"
+    echo "  __aeabi_Xrsub: Reverse floating point subtraction"
+    echo "  __aeabi_Xmul: Floating point multiplication"
+    echo "  __aeabi_Xdiv: Floating point division"
+    echo "  __aeabi_i2X: Integer to floating point conversion"
+    echo "  __aeabi_X2i: Floating point to integer conversion"
+    echo "  __aeabi_ui2X: Unsigned integer to floating point conversion"
+    echo "  __aeabi_X2ui: Floating point to unsigned integer conversion"
+    echo "  __aeabi_Xcmpeq: Floating point equality comparison"
+    echo "  __aeabi_Xcmplt: Floating point less than comparison"
+    echo "  __aeabi_Xcmple: Floating point less than or equal comparison"
+    echo "  __aeabi_Xcmpge: Floating point greater than or equal comparison"
+    echo "  __aeabi_Xcmpgt: Floating point greater than comparison"
+    echo "  __aeabi_Xcmpun: Floating point unordered comparison (for NaN)"
+    echo "X Could be 'f' (float single precission) or 'd' (double precission)"
+    echo ""
+}
+
+###############################################################################
+
 # Show memory size of requested component (-s)
 
 size_of_component()
@@ -348,7 +396,7 @@ size_of_component()
 
 ###############################################################################
 
-# Show Common Dynamic Memory Functions Used (-x)
+# Show any common Dynamic Memory Functions Used (-x)
 
 check_dynamic_memory_function()
 {
@@ -382,6 +430,7 @@ show_help()
     echo "Options:"
     echo "  -a, --analyse             Analyse and export ELF info to files"
     echo "  -d, --disassemble [funct] Show ASM code of a function"
+    echo "  -f, --float               Show SW Float Operation function used"
     echo "  -h, --help                Show current help information"
     echo "  -s, --size [file.cpp]     Show memory size of a component"
     echo "  -x, --dynamic             Show common dynamic memory function used"
@@ -427,6 +476,9 @@ do
     elif [ "$arg" == "-d" ] || [ "$arg" == "--disassemble" ]; then
         ii=$((i+1))
         disassembly "${!ii}"
+        exit 0
+    elif [ "$arg" == "-f" ] || [ "$arg" == "--float" ]; then
+        check_software_float
         exit 0
     elif [ "$arg" == "-s" ] || [ "$arg" == "--size" ]; then
         ii=$((i+1))
