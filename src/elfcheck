@@ -15,6 +15,9 @@
 #
 # - Check size of source code components (i.e. mycomponent.cpp).
 #
+# - Check and show if ELF binary uses any common C/C++ dynamic memory
+#   related function (malloc, free, new, delete, etc).
+#
 
 ###############################################################################
 
@@ -361,15 +364,17 @@ show_help()
     echo "${SCRIPT_NAME} binary.elf [option] [argument]"
     echo ""
     echo "Options:"
-    echo "  -h, --help                   Show current help information"
-    echo "  -a, --analyse                Analyse and export ELF info to files"
-    echo "  -d, --disassemble [function] Show ASM code of a function"
-    echo "  -s, --size [file.cpp]        Show memory size of a component"
+    echo "  -h, --help                Show current help information"
+    echo "  -a, --analyse             Analyse and export ELF info to files"
+    echo "  -d, --disassemble [funct] Show ASM code of a function"
+    echo "  -s, --size [file.cpp]     Show memory size of a component"
+    echo "  -x, --dynamic             Show common dynamic memory function used"
     echo ""
     echo "Examples:"
     echo "  ${SCRIPT_NAME} binary.elf -a"
     echo "  ${SCRIPT_NAME} binary.elf -d main"
     echo "  ${SCRIPT_NAME} binary.elf -s main.cpp"
+    echo "  ${SCRIPT_NAME} binary.elf -x"
     echo ""
 }
 
