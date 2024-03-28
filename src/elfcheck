@@ -338,10 +338,10 @@ show_help()
     echo "${SCRIPT_NAME} binary.elf [option] [argument]"
     echo ""
     echo "Options:"
-    echo "  -h, --help            Show current help information"
-    echo "  -a, --analyse         Analyse and export ELF info to output files"
-    echo "  -d, --asm [function]  Disassembly and show ASM code of a function"
-    echo "  -s, --size [file.cpp] Show memory size of requested component"
+    echo "  -h, --help                   Show current help information"
+    echo "  -a, --analyse                Analyse and export ELF info to files"
+    echo "  -d, --disassemble [function] Show ASM code of a function"
+    echo "  -s, --size [file.cpp]        Show memory size of a component"
     echo ""
     echo "Examples:"
     echo "  ${SCRIPT_NAME} binary.elf -a"
@@ -380,7 +380,7 @@ do
     elif [ "$arg" == "-a" ] || [ "$arg" == "--analyse" ]; then
         analysis
         exit 0
-    elif [ "$arg" == "-d" ] || [ "$arg" == "--disassembly" ]; then
+    elif [ "$arg" == "-d" ] || [ "$arg" == "--disassemble" ]; then
         ii=$((i+1))
         disassembly "${!ii}"
         exit 0
