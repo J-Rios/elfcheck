@@ -26,8 +26,8 @@
 
 # Constants
 
-VERSION="1.0.0"
-DATE="2024/03/28"
+VERSION="1.0.1"
+DATE="2024/08/07"
 SCRIPT_NAME=$(basename "$0")
 
 FILE_ELF="$1"
@@ -35,10 +35,11 @@ FILE_ELF_NAME=$(basename -- "$FILE_ELF")
 FILE_ELF_NAME="${FILE_ELF_NAME%.*}"
 DIR_OUT_ANALYSIS="./elf_analysis"
 
-#TOOLCHAIN_NATIVE=""
-#TOOLCHAIN_AVR="avr-"
+# Select Toolchain to use by prefix (uncomment and set TC=$TOOLCHAIN_X)
+#TOOLCHAIN_NATIVE=""   # For x86, x86_64, etc
+TOOLCHAIN_ARM="arm-none-eabi-"  # For ARM devices
+#TOOLCHAIN_AVR="avr-"  # For AVR microcontrollers
 # ...
-TOOLCHAIN_ARM="arm-none-eabi-"
 TC=$TOOLCHAIN_ARM
 
 ###############################################################################
@@ -140,7 +141,7 @@ analysis()
 
     # Get Sections
     SECTIONS=$(
-        ${TC}readelf -S $FILE_ELF \
+        ${TC}readelf -WS $FILE_ELF \
         | grep -E "^\s*\[\s*[1-9]+\]" | grep -o -P "(?<=] ).*"
     )
 
@@ -188,7 +189,7 @@ analysis()
     echof_info "########################################"
     echof_info "# ABI Information"
     echof_info "########################################"
-    ABI=$(${TC}readelf -A $FILE_ELF)
+    ABI=$(${TC}readelf -WA $FILE_ELF)
     echof_info "${ABI}"
     echof_info ""
 
@@ -197,7 +198,7 @@ analysis()
     echof_info "# C Build Flags"
     echof_info "########################################"
     BUILD_FLAGS_C=$(
-        ${TC}readelf --debug-dump $FILE_ELF \
+        ${TC}readelf -W --debug-dump $FILE_ELF \
         | grep -m1 -E "DW_AT_producer.*: GNU C([0-9]| )"
     )
     echof_info "${BUILD_FLAGS_C}"
@@ -208,7 +209,7 @@ analysis()
     echof_info "# C++ Build Flags"
     echof_info "########################################"
     BUILD_FLAGS_CPP=$(
-        ${TC}readelf --debug-dump $FILE_ELF \
+        ${TC}readelf -W --debug-dump $FILE_ELF \
         | grep -m1 -E "DW_AT_producer.*: GNU C\+\+([0-9]| )"
     )
     echof_info "${BUILD_FLAGS_CPP}"
@@ -218,7 +219,7 @@ analysis()
     #echof_info "########################################"
     #echof_info "# Build ID:"
     #echof_info "########################################"
-    #BUILD_ID=$(${TC}readelf -n $FILE_ELF)
+    #BUILD_ID=$(${TC}readelf -Wn $FILE_ELF)
     #echof_info "${BUILD_ID}"
     #echof_info ""
 
@@ -340,7 +341,7 @@ check_software_float()
     fi
     echo "${RESULT}"
     echo ""
-    echo "Info regarding ARM ABI Floating Point Software Functions:"
+    echo "Info regarding ABI Floating Point Software Functions:"
     echo "  __aeabi_Xadd: Floating point addition"
     echo "  __aeabi_Xsub: Floating point subtraction"
     echo "  __aeabi_Xrsub: Reverse floating point subtraction"

@@ -1,4 +1,6 @@
 
 **/.vscode
 **/elf_analysis
+samples/
+
 *.elf
